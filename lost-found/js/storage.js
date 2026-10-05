@@ -12,9 +12,9 @@
 (function (global) {
   'use strict';
 
-  // 信息列表与“本机发布”id 列表各自的存储 key
-  var ITEMS_KEY = 'lost_found_items_v2';
-  var MINE_KEY = 'lost_found_mine_ids_v2';
+  // 信息列表与“本机发布”id 列表各自的存储 key（v4：新增 seed-16 供匹配提醒演示）
+  var ITEMS_KEY = 'lost_found_items_v4';
+  var MINE_KEY = 'lost_found_mine_ids_v3';
   var FAVORITES_KEY = 'lost_found_favorites_v2'; // 收藏的信息 id 列表
   var PROFILE_KEY = 'lost_found_profile_v1';     // 个人资料（昵称等）
   var REPORTS_KEY = 'lost_found_reports_v1';     // 举报记录：{ 帖子id: { reason, detail, time } }
@@ -65,7 +65,7 @@
 
   /**
    * 构造示例数据（首次运行写入）
-   * 其中 seed-2、seed-5 同时写入“本机发布”，方便演示“我的发布”页。
+   * 其中 seed-2、seed-5、seed-15 为“本机发布”（本人视角内容），方便演示“我的发布”页。
    */
   function buildSeedItems() {
     var HOUR = 3600 * 1000;
@@ -91,9 +91,9 @@
         category: '钥匙',
         location: '旗山校区西三教学楼 301',
         time: new Date(now - 26 * HOUR).toISOString(),
-        description: '下课后在第三排座位底下捡到的，蓝色尼龙挂绳，上面有3把钥匙和一个小指甲剪。已在楼管处登记，失主请核对钥匙特征。',
-        contact: '微信 xiaoming2026',
-        publisher: '明仔',
+        description: '下课后我在西三 301 第三排座位底下捡到一串钥匙，蓝色尼龙挂绳，上面有 3 把钥匙和一个小指甲剪。已交给楼管登记，失主请核对钥匙特征来认领。',
+        contact: 'QQ 321321321',
+        publisher: '福大同学',
         status: 'done',
         createdAt: now - 26 * HOUR
       },
@@ -131,8 +131,8 @@
         location: '体育馆室外篮球场',
         time: new Date(now - 30 * HOUR).toISOString(),
         description: '昨晚打完球把杯子落在场边台阶上了，银色保温杯，杯底贴了写着“03”的姓名贴，对我挺有纪念意义的。',
-        contact: '微信 baller_1024',
-        publisher: '我自己',
+        contact: '微信 fz_stu_2026',
+        publisher: '福大同学',
         status: 'active',
         createdAt: now - 30 * HOUR
       },
@@ -260,6 +260,34 @@
         publisher: '实验楼保安',
         status: 'active',
         createdAt: now - 11 * HOUR
+      },
+      {
+        id: 'seed-15',
+        type: 'found',
+        campus: '旗山校区',
+        title: '一张蓝白色校园卡',
+        category: '校园卡',
+        location: '风雨操场看台',
+        time: new Date(now - 20 * HOUR).toISOString(),
+        description: '傍晚跑步时我在风雨操场看台上捡到一张蓝白配色的校园卡，卡面有轻微磨损。请失主描述卡面姓名和学院来认领，我每天傍晚都在操场。',
+        contact: 'QQ 321321321',
+        publisher: '福大同学',
+        status: 'active',
+        createdAt: now - 20 * HOUR
+      },
+      {
+        id: 'seed-16',
+        type: 'lost',
+        campus: '旗山校区',
+        title: '一串黑色钥匙（带乐高积木挂件）',
+        category: '钥匙',
+        location: '图书馆三楼北侧阅览区',
+        time: new Date(now - 4 * HOUR).toISOString(),
+        description: '中午在图书馆三楼北侧阅览区自习后，我的黑色钥匙串不见了，上面有 2 把钥匙和一个绿色乐高积木挂件。有捡到的同学请按联系方式联系我，必有重谢！',
+        contact: 'QQ 556677889',
+        publisher: '林同学',
+        status: 'active',
+        createdAt: now - 4 * HOUR
       }
     ];
   }
@@ -268,15 +296,15 @@
   function initStorage() {
     if (localStorage.getItem(ITEMS_KEY) === null) {
       writeJSON(ITEMS_KEY, buildSeedItems());
-      // 示例中 seed-2、seed-5 视为本机发布
-      writeJSON(MINE_KEY, ['seed-2', 'seed-5']);
+      // 示例中 seed-2、seed-5、seed-15 视为本机发布
+      writeJSON(MINE_KEY, ['seed-2', 'seed-5', 'seed-15']);
     }
     if (localStorage.getItem(FAVORITES_KEY) === null) {
       // 默认收藏 1 条，方便演示“我的收藏”
       writeJSON(FAVORITES_KEY, ['seed-1']);
     }
     if (localStorage.getItem(PROFILE_KEY) === null) {
-      writeJSON(PROFILE_KEY, { nickname: '福大同学', avatar: '🐱', studentId: '', college: '' });
+      writeJSON(PROFILE_KEY, { nickname: '福大同学', avatar: '🐱', studentId: '', college: '', phone: '', wechat: '', qq: '' });
     }
   }
 
@@ -371,6 +399,20 @@
     });
   }
 
+  /**
+   * 匹配查询：与某条信息"类型互补、类别一致"的其他人信息。
+   * 我的寻物帖 ↔ 他人的招领帖；我的招领帖 ↔ 他人的寻物帖。
+   * 返回结果按发布时间倒序（getItems 已排序）。
+   */
+  function findMatches(item) {
+    return getItems().filter(function (other) {
+      return other.id !== item.id &&
+        !isMine(other.id) &&
+        other.type !== item.type &&
+        other.category === item.category;
+    });
+  }
+
   /* ---------- 收藏 ---------- */
 
   function getFavoriteIds() {
@@ -426,7 +468,7 @@
   /* ---------- 个人资料 ---------- */
 
   function getProfile() {
-    return readJSON(PROFILE_KEY, { nickname: '福大同学', avatar: '🐱', studentId: '', college: '' });
+    return readJSON(PROFILE_KEY, { nickname: '福大同学', avatar: '🐱', studentId: '', college: '', phone: '', wechat: '', qq: '' });
   }
 
   function updateProfile(patch) {
@@ -512,6 +554,7 @@
     removeItem: removeItem,
     isMine: isMine,
     getMineItems: getMineItems,
+    findMatches: findMatches,
     isFavorite: isFavorite,
     toggleFavorite: toggleFavorite,
     getFavoriteItems: getFavoriteItems,

@@ -11,12 +11,18 @@
   var nicknameInput = UI.$('#nickname');
   var studentIdInput = UI.$('#studentId');
   var collegeInput = UI.$('#college');
+  var phoneInput = UI.$('#phone');
+  var wechatInput = UI.$('#wechat');
+  var qqInput = UI.$('#qq');
   var avatarOptions = UI.$all('.avatar-opt');
   var selectedAvatar = profile.avatar || '🐱';
 
   nicknameInput.value = profile.nickname || '';
   studentIdInput.value = profile.studentId || '';
   collegeInput.value = profile.college || '';
+  phoneInput.value = profile.phone || '';
+  wechatInput.value = profile.wechat || '';
+  qqInput.value = profile.qq || '';
 
   // 选中当前头像
   avatarOptions.forEach(function (opt) {
@@ -41,7 +47,10 @@
       nickname: nickname,
       avatar: selectedAvatar,
       studentId: studentIdInput.value.trim(),
-      college: collegeInput.value.trim()
+      college: collegeInput.value.trim(),
+      phone: phoneInput.value.trim(),
+      wechat: wechatInput.value.trim(),
+      qq: qqInput.value.trim()
     });
     UI.toast('资料已保存');
     setTimeout(function () { location.href = 'profile.html'; }, 600);

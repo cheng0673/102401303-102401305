@@ -53,8 +53,9 @@ body {
   padding-bottom: calc(var(--nav-height) + 20px); /* 给底部导航留位 */
 }
 
-/* 首页背景中间嵌入半透明校徽水印（滚动时固定居中） */
-body[data-page="index"] .app::before {
+/* 首页/个人中心背景中间嵌入半透明校徽水印（滚动时固定居中） */
+body[data-page="index"] .app::before,
+body.page-profile .app::before {
   content: '';
   position: fixed;
   top: 50%;
@@ -68,20 +69,35 @@ body[data-page="index"] .app::before {
   z-index: 0;
 }
 
-/* 首页内容区置于水印之上（header/toolbar 已有 sticky + z-index，无需覆盖） */
-body[data-page="index"] .app > main {
+/* 内容区置于水印之上（header/toolbar 已有 sticky + z-index，无需覆盖） */
+body[data-page="index"] .app > main,
+body.page-profile .app > main {
   position: relative;
   z-index: 1;
 }
 
-/* 首页列表底色：Figma 米白 #F6F7F4（半透明，透出固定校徽水印） */
-body[data-page="index"] .app {
+/* 列表底色：Figma 米白 #F6F7F4（半透明，透出固定校徽水印） */
+body[data-page="index"] .app,
+body.page-profile .app {
   background: rgba(246, 247, 244, 0.82);
 }
 
 /* 首页卡片半透明，让水印隐约透出 */
 body[data-page="index"] .card {
   background: rgba(255, 255, 255, 0.82);
+}
+
+/* 个人中心及其子页内容块半透明，透出水印 */
+body.page-profile .profile-stats,
+body.page-profile .entry-list,
+body.page-profile .mine-stats,
+body.page-profile .card,
+body.page-profile .msg-item {
+  background: rgba(255, 255, 255, 0.82);
+}
+
+body.page-profile .stat-box {
+  background: rgba(246, 247, 244, 0.65);
 }
 
 a {
@@ -803,20 +819,13 @@ textarea.form-control {
   flex-shrink: 0;
 }
 
-.mine-card-body {
-  flex: 1;
-  min-width: 0;
-  position: relative;
+.mine-card-main > .status {
+  display: inline-block;
+  margin-bottom: 6px; /* 状态徽章固定在卡片内容左上角 */
 }
 
-.mine-card-body .card-title {
+.mine-card-main .card-title {
   margin-bottom: 4px;
-}
-
-.mine-card-body .status {
-  position: absolute;
-  top: 0;
-  right: 0;
 }
 
 .mine-actions {
@@ -827,12 +836,76 @@ textarea.form-control {
 }
 
 .mine-actions .btn {
-  min-width: 84px;
+  width: 108px; /* 固定宽度，所有操作按钮大小统一 */
   min-height: 34px;
-  padding: 0 12px;
+  padding: 0 8px;
   font-size: 13px;
   border-radius: 17px;
   white-space: nowrap;
+}
+
+/* ---------- 匹配提醒页 ---------- */
+
+/* 分组：我的帖子概况 + 相关帖子列表 */
+.match-group { margin: 14px 14px 0; }
+
+.match-mine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  background: var(--primary-light);
+  border-radius: 12px;
+}
+
+.match-mine-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.match-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  white-space: nowrap;
+}
+
+/* 相关帖子概况卡片：整体可点击跳详情 */
+.match-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  text-decoration: none;
+}
+
+.match-card .mine-card-main { flex: 1; }
+
+.match-arrow {
+  flex: none;
+  font-size: 20px;
+  color: #c3c7cf;
+}
+
+/* 消息列表：匹配提醒可点击，右侧箭头提示 */
+.msg-arrow {
+  align-self: center;
+  flex: none;
+  font-size: 18px;
+  color: #c3c7cf;
+}
+
+.empty-tip {
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-top: 4px;
 }
 
 /* ---------- 底部导航 ---------- */
@@ -939,6 +1012,35 @@ textarea.form-control {
 /* 卡片内的主链接区域（我的发布 / 收藏页使用） */
 .mine-card-main {
   display: block;
+}
+
+/* 收藏页：主链接作为卡片直接子项时撑满剩余宽度，
+   使右侧按钮列与“我的发布”页一样贴齐卡片右缘 */
+.card > .mine-card-main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 类别小徽章（收藏页标题行内）：寻物橙 / 招领绿 */
+.badge {
+  display: inline-block;
+  vertical-align: 2px;
+  margin-right: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.badge-lost {
+  color: var(--lost);
+  background: var(--lost-light);
+}
+
+.badge-found {
+  color: var(--found);
+  background: var(--found-light);
 }
 
 /* ---------- 个人中心 ---------- */
@@ -1653,9 +1755,12 @@ body.gate-open {
   padding: 0;
 }
 
-.img-add {
-  width: 78px;
+/* 用 .img-uploader 前缀提高优先级，避免被 .form-group label 的 display:block 覆盖 */
+.img-uploader .img-add {
+  flex: 1;
+  min-width: 150px;
   height: 78px;
+  margin-bottom: 0; /* 覆盖 .form-group label 的 6px 外边距 */
   border: 1.5px dashed #d0d4de;
   border-radius: 12px;
   background: #fafbfc;
@@ -1672,14 +1777,20 @@ body.gate-open {
   background: var(--bg);
 }
 
+/* 两行居中文字：主行 + 提示行 */
 .img-add .img-add-plus {
-  font-size: 22px;
-  line-height: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.3;
+  white-space: nowrap;
 }
 
 .img-add .img-add-text {
   font-size: 11px;
   line-height: 1.3;
+  color: #9a9ea6;
+  white-space: nowrap;
 }
 
 /* ---------- 底部弹层（校区切换 / 地点快选共用） ---------- */

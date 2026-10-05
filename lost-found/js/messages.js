@@ -41,20 +41,37 @@
       });
     });
 
-    // 2) 匹配提醒：收藏中仍在进行中的信息
+    // 2) 匹配提醒：与我发布的信息类型互补、类别一致的其他人帖子，
+    //    点击可进入匹配列表页查看相关帖子概况
+    Storage.getMineItems().forEach(function (item) {
+      var matches = Storage.findMatches(item);
+      if (matches.length === 0) return;
+      msgs.push({
+        id: 'match-' + item.id,
+        type: '匹配提醒',
+        icon: '🔔',
+        title: '你的' + UI.TYPE_TEXT[item.type] + '《' + item.title + '》有 ' + matches.length + ' 条匹配信息',
+        content: '发现 ' + matches.length + ' 条类别相同的' +
+          (item.type === 'lost' ? '招领' : '寻物') + '信息，点击查看相关帖子。',
+        time: item.createdAt + 45000,
+        matchId: item.id
+      });
+    });
+
+    // 3) 收藏动态：收藏中仍在进行中的信息
     var favActive = Storage.getFavoriteItems().filter(function (i) { return i.status === 'active'; });
     favActive.forEach(function (item) {
       msgs.push({
         id: 'fav-' + item.id,
-        type: '匹配提醒',
-        icon: '🔔',
+        type: '收藏动态',
+        icon: '⭐',
         title: '收藏的《' + item.title + '》仍在寻找中',
         content: '这条' + UI.TYPE_TEXT[item.type] + '信息尚未完成，继续关注或许有新进展。',
         time: item.createdAt
       });
     });
 
-    // 3) 浏览动态：本机发布的进行中信息
+    // 4) 浏览动态：本机发布的进行中信息
     var mineActive = Storage.getMineItems().filter(function (i) { return i.status === 'active'; });
     mineActive.forEach(function (item) {
       msgs.push({
@@ -67,7 +84,7 @@
       });
     });
 
-    // 4) 系统通知（固定）
+    // 5) 系统通知（固定）
     msgs.push({
       id: 'sys-welcome',
       type: '系统通知',
@@ -106,15 +123,18 @@
             '<div class="msg-title">' + UI.escapeHtml(m.title) + '</div>' +
             '<div class="msg-content">' + UI.escapeHtml(m.content) + '</div>' +
           '</div>' +
+          (m.matchId ? '<span class="msg-arrow">›</span>' : '') +
         '</div>';
     }).join('');
   }
 
-  // 点击单条消息标记已读
+  // 点击单条消息：匹配提醒跳转匹配列表页，其余仅标记已读
   listEl.addEventListener('click', function (e) {
     var item = e.target.closest('.msg-item');
     if (!item) return;
     var id = item.getAttribute('data-id');
+
+    // 标记已读
     var readIds = getReadIds();
     if (readIds.indexOf(id) === -1) {
       readIds.push(id);
@@ -122,6 +142,11 @@
       item.classList.remove('msg-unread');
       var dot = UI.$('.msg-dot', item);
       if (dot) dot.remove();
+    }
+
+    // 匹配提醒：进入匹配列表页并置顶对应分组
+    if (id.indexOf('match-') === 0) {
+      location.href = 'matches.html?mine=' + encodeURIComponent(id.slice(6));
     }
   });
 

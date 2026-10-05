@@ -1,28 +1,30 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>消息通知 - 福大失物招领</title>
+  <title>匹配提醒 - 福大失物招领</title>
   <link rel="stylesheet" href="css/style.css?v=13">
 </head>
 <body data-page="profile" class="page-profile">
   <div class="app">
     <header class="page-header">
-      <a class="back-btn" href="profile.html" aria-label="返回个人中心">‹</a>
-      <h2>消息通知</h2>
-      <button class="back-btn" id="markRead" type="button" style="font-size:13px;width:auto;">全部已读</button>
+      <a class="back-btn" href="messages.html" aria-label="返回消息通知">‹</a>
+      <h2>匹配提醒</h2>
+      <span class="header-placeholder"></span>
     </header>
 
     <main>
-      <section id="msgList" class="msg-list" aria-live="polite"></section>
-      <section id="msgEmpty" class="empty" hidden>
+      <!-- 与我发布的信息类型互补、类别一致的其他人帖子，按我的帖子分组展示 -->
+      <section id="matchList"></section>
+      <section id="matchEmpty" class="empty" hidden>
         <span class="empty-icon">🔔</span>
-        <span class="empty-text">暂无消息</span>
+        <span class="empty-text">暂无匹配信息</span>
+        <span class="empty-tip">发布寻物/招领后，类别一致的信息会自动匹配到这里</span>
       </section>
     </main>
 
-        <nav class="bottom-nav">
+    <nav class="bottom-nav">
       <a class="nav-item" data-nav="index" href="index.html">首页</a>
       <a class="nav-item nav-publish" data-nav="publish" href="publish.html" aria-label="发布"></a>
       <a class="nav-item" data-nav="profile" href="profile.html">我的</a>
@@ -31,6 +33,6 @@
 
   <script src="js/storage.js?v=10"></script>
   <script src="js/common.js?v=10"></script>
-  <script src="js/messages.js?v=3"></script>
+  <script src="js/matches.js?v=3"></script>
 </body>
 </html>

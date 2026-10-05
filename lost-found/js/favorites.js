@@ -15,12 +15,12 @@
     var statusClass = item.status === 'done' ? 'status-done' : 'status-active';
     return '' +
       '<div class="card">' +
+        '<a class="mine-card-icon" href="detail.html?id=' + encodeURIComponent(item.id) + '">' +
+          UI.escapeHtml(UI.categoryIcon(item.category)) +
+        '</a>' +
         '<a class="mine-card-main" href="detail.html?id=' + encodeURIComponent(item.id) + '">' +
-          '<div class="card-top">' +
-            '<span class="badge ' + typeClass + '">' + UI.TYPE_TEXT[item.type] + '</span>' +
-            '<span class="status ' + statusClass + '">' + UI.statusText(item) + '</span>' +
-          '</div>' +
-          '<h3 class="card-title">' + UI.escapeHtml(item.title) + '</h3>' +
+          '<span class="status ' + statusClass + '">' + UI.statusText(item) + '</span>' +
+          '<h3 class="card-title"><span class="badge ' + typeClass + '">' + UI.TYPE_TEXT[item.type] + '</span>' + UI.escapeHtml(item.title) + '</h3>' +
           '<div class="card-meta">' +
             '<span class="meta-item">📍 ' + UI.escapeHtml(item.location) + '</span>' +
             '<span class="meta-item">🕐 ' + UI.escapeHtml(UI.formatDateTime(item.time)) + '</span>' +
