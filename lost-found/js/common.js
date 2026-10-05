@@ -239,6 +239,7 @@
     copyText: copyText,
     TYPE_TEXT: TYPE_TEXT,
     statusText: statusText,
+    categoryIcon: categoryIcon,
     hashAvatar: hashAvatar
   };
 })(window);

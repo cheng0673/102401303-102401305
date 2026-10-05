@@ -11,9 +11,10 @@
   var listEl = UI.$('#mineList');
   var emptyEl = UI.$('#mineEmpty');
 
-  /** 渲染“我的发布”卡片（图二：左右布局，右侧竖排操作按钮） */
+  /** 渲染“我的发布”卡片（与“我的收藏”统一格式：图标 + 状态/标题/meta + 右侧操作按钮） */
   function mineCardHTML(item) {
     var statusClass = item.status === 'done' ? 'status-done' : 'status-active';
+    var typeClass = item.type === 'lost' ? 'badge-lost' : 'badge-found';
     var doneWord = item.type === 'lost' ? '已找到' : '已归还';
 
     // 进行中才显示“标记完成”按钮
@@ -25,20 +26,16 @@
     return '' +
       '<div class="card mine-card">' +
         '<a class="mine-card-icon" href="detail.html?id=' + encodeURIComponent(item.id) + '">' +
-          UI.escapeHtml(UI.hashAvatar(item.title)) +
+          UI.escapeHtml(UI.categoryIcon(item.category)) +
         '</a>' +
-        '<div class="mine-card-body">' +
-          '<a class="mine-card-main" href="detail.html?id=' + encodeURIComponent(item.id) + '">' +
-            '<h3 class="card-title">' + UI.escapeHtml(item.title) + '</h3>' +
-            '<div class="card-meta">' +
-              '<span class="meta-item">📍 ' + UI.escapeHtml(item.location) + '</span>' +
-            '</div>' +
-            '<div class="card-meta">' +
-              '<span class="meta-item">🕐 ' + UI.escapeHtml(UI.formatDateTime(item.time)) + '</span>' +
-            '</div>' +
-          '</a>' +
+        '<a class="mine-card-main" href="detail.html?id=' + encodeURIComponent(item.id) + '">' +
           '<span class="status ' + statusClass + '">' + UI.statusText(item) + '</span>' +
-        '</div>' +
+          '<h3 class="card-title"><span class="badge ' + typeClass + '">' + UI.TYPE_TEXT[item.type] + '</span>' + UI.escapeHtml(item.title) + '</h3>' +
+          '<div class="card-meta">' +
+            '<span class="meta-item">📍 ' + UI.escapeHtml(item.location) + '</span>' +
+            '<span class="meta-item">🕐 ' + UI.escapeHtml(UI.formatDateTime(item.time)) + '</span>' +
+          '</div>' +
+        '</a>' +
         '<div class="mine-actions">' +
           '<a class="btn btn-outline" href="publish.html?id=' + encodeURIComponent(item.id) + '">✏️ 编辑</a>' +
           markBtn +
