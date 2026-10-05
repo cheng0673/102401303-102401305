@@ -844,6 +844,70 @@ textarea.form-control {
   white-space: nowrap;
 }
 
+/* ---------- 匹配提醒页 ---------- */
+
+/* 分组：我的帖子概况 + 相关帖子列表 */
+.match-group { margin: 14px 14px 0; }
+
+.match-mine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  background: var(--primary-light);
+  border-radius: 12px;
+}
+
+.match-mine-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.match-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  white-space: nowrap;
+}
+
+/* 相关帖子概况卡片：整体可点击跳详情 */
+.match-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  text-decoration: none;
+}
+
+.match-card .mine-card-main { flex: 1; }
+
+.match-arrow {
+  flex: none;
+  font-size: 20px;
+  color: #c3c7cf;
+}
+
+/* 消息列表：匹配提醒可点击，右侧箭头提示 */
+.msg-arrow {
+  align-self: center;
+  flex: none;
+  font-size: 18px;
+  color: #c3c7cf;
+}
+
+.empty-tip {
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-top: 4px;
+}
+
 /* ---------- 底部导航 ---------- */
 .bottom-nav {
   position: fixed;

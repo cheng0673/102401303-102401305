@@ -12,8 +12,8 @@
 (function (global) {
   'use strict';
 
-  // 信息列表与“本机发布”id 列表各自的存储 key（v3：本机发布的示例改为本人视角内容）
-  var ITEMS_KEY = 'lost_found_items_v3';
+  // 信息列表与“本机发布”id 列表各自的存储 key（v4：新增 seed-16 供匹配提醒演示）
+  var ITEMS_KEY = 'lost_found_items_v4';
   var MINE_KEY = 'lost_found_mine_ids_v3';
   var FAVORITES_KEY = 'lost_found_favorites_v2'; // 收藏的信息 id 列表
   var PROFILE_KEY = 'lost_found_profile_v1';     // 个人资料（昵称等）
@@ -274,6 +274,20 @@
         publisher: '福大同学',
         status: 'active',
         createdAt: now - 20 * HOUR
+      },
+      {
+        id: 'seed-16',
+        type: 'lost',
+        campus: '旗山校区',
+        title: '一串黑色钥匙（带乐高积木挂件）',
+        category: '钥匙',
+        location: '图书馆三楼北侧阅览区',
+        time: new Date(now - 4 * HOUR).toISOString(),
+        description: '中午在图书馆三楼北侧阅览区自习后，我的黑色钥匙串不见了，上面有 2 把钥匙和一个绿色乐高积木挂件。有捡到的同学请按联系方式联系我，必有重谢！',
+        contact: 'QQ 556677889',
+        publisher: '林同学',
+        status: 'active',
+        createdAt: now - 4 * HOUR
       }
     ];
   }
@@ -382,6 +396,20 @@
     var mineIds = readJSON(MINE_KEY, []);
     return getItems().filter(function (item) {
       return mineIds.indexOf(item.id) !== -1;
+    });
+  }
+
+  /**
+   * 匹配查询：与某条信息"类型互补、类别一致"的其他人信息。
+   * 我的寻物帖 ↔ 他人的招领帖；我的招领帖 ↔ 他人的寻物帖。
+   * 返回结果按发布时间倒序（getItems 已排序）。
+   */
+  function findMatches(item) {
+    return getItems().filter(function (other) {
+      return other.id !== item.id &&
+        !isMine(other.id) &&
+        other.type !== item.type &&
+        other.category === item.category;
     });
   }
 
@@ -526,6 +554,7 @@
     removeItem: removeItem,
     isMine: isMine,
     getMineItems: getMineItems,
+    findMatches: findMatches,
     isFavorite: isFavorite,
     toggleFavorite: toggleFavorite,
     getFavoriteItems: getFavoriteItems,
