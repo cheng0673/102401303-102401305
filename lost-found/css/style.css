@@ -243,7 +243,38 @@ input, select, textarea {
 .type-tabs {
   display: flex;
   gap: 22px;
+}
+
+.toolbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 10px;
+  gap: 10px;
+}
+
+/* 时间排序选择器（首页工具栏右侧） */
+.sort-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: var(--bg);
+  border-radius: 14px;
+  flex-shrink: 0;
+}
+
+.sort-icon {
+  font-size: 14px;
+}
+
+.sort-select {
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--text-main);
+  outline: none;
+  padding: 0;
 }
 
 .type-tab {
@@ -753,18 +784,55 @@ textarea.form-control {
   color: var(--text-sub);
 }
 
+/* 我的发布卡片：图二左右布局，右侧竖排操作按钮 */
+.mine-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mine-card-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  flex-shrink: 0;
+}
+
+.mine-card-body {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+
+.mine-card-body .card-title {
+  margin-bottom: 4px;
+}
+
+.mine-card-body .status {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 .mine-actions {
   display: flex;
+  flex-direction: column;
   gap: 8px;
-  margin-top: 10px;
+  flex-shrink: 0;
 }
 
 .mine-actions .btn {
-  flex: 1;
-  min-height: 36px;
-  padding: 0 6px;
+  min-width: 84px;
+  min-height: 34px;
+  padding: 0 12px;
   font-size: 13px;
-  border-radius: 8px;
+  border-radius: 17px;
+  white-space: nowrap;
 }
 
 /* ---------- 底部导航 ---------- */
@@ -1746,4 +1814,236 @@ body.gate-open {
   max-width: 100%;
   max-height: 100%;
   border-radius: 12px;
+}
+
+/* ============================================================
+   举报页 / 发布者主页（新功能样式，沿用红色主题变量）
+   ============================================================ */
+
+/* ---------- 详情页：发布者行（点击进入发布者主页） ---------- */
+.publisher-row .publisher-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.publisher-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.publisher-row .row-arrow {
+  margin-left: auto;
+  color: #c0c4cc;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.publisher-row:active {
+  background: var(--bg);
+}
+
+/* ---------- 详情页：举报入口 ---------- */
+.report-entry {
+  text-align: center;
+  padding: 2px 0 6px;
+}
+
+.report-entry a {
+  font-size: 13px;
+  color: var(--text-sub);
+  text-decoration: underline;
+  text-decoration-color: #d8dbe3;
+  text-underline-offset: 3px;
+}
+
+.report-entry .reported-text {
+  font-size: 13px;
+  color: #b0b6c0;
+}
+
+/* ---------- 举报页（Figma 原型 15.举报） ---------- */
+.report-form {
+  padding: 16px 16px 24px;
+}
+
+.report-hint {
+  font-size: 13px;
+  color: var(--text-sub);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.report-hint .report-target {
+  color: var(--primary);
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.report-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.report-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 13px 14px;
+  font-size: 15px;
+  color: var(--text-main);
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.report-option .radio-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid #c0c4cc;
+  position: relative;
+  flex-shrink: 0;
+  transition: border-color 0.15s;
+}
+
+.report-option.selected {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.report-option.selected .radio-dot {
+  border-color: var(--primary);
+}
+
+.report-option.selected .radio-dot::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+.report-form .form-group {
+  margin-bottom: 18px;
+}
+
+/* ---------- 发布者主页（Figma 原型 16.发布者主页） ---------- */
+/* 资料卡：白底卡片，左侧头像，右侧昵称/学号学院/统计 */
+.up-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 14px 16px 0;
+  padding: 18px 16px;
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.up-avatar {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  flex-shrink: 0;
+}
+
+.up-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.up-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 3px;
+}
+
+.up-meta {
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-bottom: 3px;
+}
+
+.up-stats {
+  font-size: 12px;
+  color: var(--primary);
+}
+
+/* 联系方式列表：每行一条，右侧复制按钮 */
+.up-contacts {
+  margin: 12px 16px 0;
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.up-contact-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.up-contact-row:last-child {
+  border-bottom: none;
+}
+
+.up-contact-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.up-contact-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  color: var(--text-main);
+  word-break: break-all;
+}
+
+.up-contact-copy {
+  flex-shrink: 0;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  background: #fff;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 14px;
+}
+
+.up-contact-copy:active {
+  background: var(--primary-light);
+}
+
+.up-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-sub);
+  padding: 16px 20px 0;
 }

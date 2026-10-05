@@ -9,10 +9,14 @@
 
   var profile = Storage.getProfile();
   var nicknameInput = UI.$('#nickname');
+  var studentIdInput = UI.$('#studentId');
+  var collegeInput = UI.$('#college');
   var avatarOptions = UI.$all('.avatar-opt');
   var selectedAvatar = profile.avatar || '🐱';
 
   nicknameInput.value = profile.nickname || '';
+  studentIdInput.value = profile.studentId || '';
+  collegeInput.value = profile.college || '';
 
   // 选中当前头像
   avatarOptions.forEach(function (opt) {
@@ -33,7 +37,12 @@
       UI.toast('昵称需在 1-20 个字之间', 'error');
       return;
     }
-    Storage.updateProfile({ nickname: nickname, avatar: selectedAvatar });
+    Storage.updateProfile({
+      nickname: nickname,
+      avatar: selectedAvatar,
+      studentId: studentIdInput.value.trim(),
+      college: collegeInput.value.trim()
+    });
     UI.toast('资料已保存');
     setTimeout(function () { location.href = 'profile.html'; }, 600);
   });

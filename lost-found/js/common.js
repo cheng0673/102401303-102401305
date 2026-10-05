@@ -203,6 +203,18 @@
     }
   }
 
+  /** 根据昵称生成稳定的 emoji 头像（同一昵称在全站显示同一头像） */
+  var AVATARS = ['🐱', '🐶', '🐰', '🦊', '🐼', '🦁', '🐯', '🐨', '🐵', '🐸', '🐹', '🦉'];
+
+  function hashAvatar(nickname) {
+    var str = String(nickname || '');
+    var h = 0;
+    for (var i = 0; i < str.length; i++) {
+      h = (h * 31 + str.charCodeAt(i)) >>> 0;
+    }
+    return AVATARS[h % AVATARS.length];
+  }
+
   /** 高亮底部导航当前页（根据 body 的 data-page 属性） */
   function highlightNav() {
     var page = document.body.getAttribute('data-page');
@@ -226,6 +238,7 @@
     renderCardList: renderCardList,
     copyText: copyText,
     TYPE_TEXT: TYPE_TEXT,
-    statusText: statusText
+    statusText: statusText,
+    hashAvatar: hashAvatar
   };
 })(window);

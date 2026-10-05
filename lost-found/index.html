@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>福大失物招领 - 首页</title>
-  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/style.css?v=8">
 </head>
 <body data-page="index">
   <!-- ============ 启动页（水彩校园背景，2.4s 后进入登录页） ============ -->
@@ -96,10 +96,19 @@
 
     <!-- 类型 Tab + 类别胶囊筛选 -->
     <div class="toolbar">
-      <div class="type-tabs" role="tablist">
-        <button class="type-tab active" data-type="all" type="button">全部</button>
-        <button class="type-tab" data-type="lost" type="button">寻物</button>
-        <button class="type-tab" data-type="found" type="button">招领</button>
+      <div class="toolbar-row">
+        <div class="type-tabs" role="tablist">
+          <button class="type-tab active" data-type="all" type="button">全部</button>
+          <button class="type-tab" data-type="lost" type="button">寻物</button>
+          <button class="type-tab" data-type="found" type="button">招领</button>
+        </div>
+        <label class="sort-wrap" aria-label="按时间排序">
+          <span class="sort-icon">🕒</span>
+          <select class="sort-select" id="sortSelect" aria-label="排序方式">
+            <option value="desc">最新发布</option>
+            <option value="asc">最早发布</option>
+          </select>
+        </label>
       </div>
       <div class="category-pills" id="categoryPills" role="tablist" aria-label="按类别筛选">
         <!-- 类别胶囊由 index.js 动态生成 -->
@@ -127,9 +136,9 @@
 
   </div>
 
-  <script src="js/storage.js?v=7"></script>
-  <script src="js/common.js?v=7"></script>
-  <script src="js/auth.js?v=7"></script>
-  <script src="js/index.js?v=7"></script>
+  <script src="js/storage.js?v=8"></script>
+  <script src="js/common.js?v=8"></script>
+  <script src="js/auth.js?v=8"></script>
+  <script src="js/index.js?v=8"></script>
 </body>
 </html>

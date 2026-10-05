@@ -16,7 +16,8 @@
   var ITEMS_KEY = 'lost_found_items_v2';
   var MINE_KEY = 'lost_found_mine_ids_v2';
   var FAVORITES_KEY = 'lost_found_favorites_v2'; // 收藏的信息 id 列表
-  var PROFILE_KEY = 'lost_found_profile_v2';     // 个人资料（昵称等）
+  var PROFILE_KEY = 'lost_found_profile_v1';     // 个人资料（昵称等）
+  var REPORTS_KEY = 'lost_found_reports_v1';     // 举报记录：{ 帖子id: { reason, detail, time } }
   var CAMPUS_KEY = 'lost_found_campus_v2';       // 当前选中校区
 
   // 物品类别（与原型设计保持一致，后续新增类别只需改这里）
@@ -275,7 +276,7 @@
       writeJSON(FAVORITES_KEY, ['seed-1']);
     }
     if (localStorage.getItem(PROFILE_KEY) === null) {
-      writeJSON(PROFILE_KEY, { nickname: '福大同学', avatar: '🐱' });
+      writeJSON(PROFILE_KEY, { nickname: '福大同学', avatar: '🐱', studentId: '', college: '' });
     }
   }
 
@@ -403,10 +404,29 @@
     });
   }
 
+  /* ---------- 举报 ---------- */
+
+  function getReports() {
+    return readJSON(REPORTS_KEY, {});
+  }
+
+  /** 同一用户（本机浏览器）对同一帖子只能举报一次 */
+  function hasReported(id) {
+    return Object.prototype.hasOwnProperty.call(getReports(), id);
+  }
+
+  /** 记录举报；重复举报返回 false */
+  function addReport(id, reason, detail) {
+    if (hasReported(id)) return false;
+    var reports = getReports();
+    reports[id] = { reason: reason, detail: detail || '', time: Date.now() };
+    return writeJSON(REPORTS_KEY, reports);
+  }
+
   /* ---------- 个人资料 ---------- */
 
   function getProfile() {
-    return readJSON(PROFILE_KEY, { nickname: '福大同学', avatar: '🐱' });
+    return readJSON(PROFILE_KEY, { nickname: '福大同学', avatar: '🐱', studentId: '', college: '' });
   }
 
   function updateProfile(patch) {
@@ -446,12 +466,36 @@
     return (item.location || '').indexOf('铜盘') !== -1 ? '铜盘校区' : '旗山校区';
   }
 
+  /** 更新信息（编辑模式）：只更新业务字段，保留 id / status / createdAt */
+  function updateItem(id, data) {
+    var items = readJSON(ITEMS_KEY, []);
+    var ok = false;
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].id === id) {
+        items[i].type = data.type;
+        items[i].title = data.title;
+        items[i].category = data.category;
+        items[i].location = data.location;
+        items[i].time = data.time;
+        items[i].description = data.description;
+        items[i].contact = data.contact;
+        items[i].publisher = data.publisher;
+        if (data.campus !== undefined) items[i].campus = data.campus;
+        if ('images' in data) items[i].images = data.images;
+        ok = true;
+        break;
+      }
+    }
+    return ok && writeJSON(ITEMS_KEY, items);
+  }
+
   /** 清空全部本地数据（设置页用） */
   function clearAll() {
     localStorage.removeItem(ITEMS_KEY);
     localStorage.removeItem(MINE_KEY);
     localStorage.removeItem(FAVORITES_KEY);
     localStorage.removeItem(PROFILE_KEY);
+    localStorage.removeItem(REPORTS_KEY);
     localStorage.removeItem(CAMPUS_KEY);
   }
 
@@ -477,6 +521,9 @@
     setCampus: setCampus,
     getCampusLocations: getCampusLocations,
     itemCampus: itemCampus,
-    clearAll: clearAll
+    clearAll: clearAll,
+    updateItem: updateItem,
+    addReport: addReport,
+    hasReported: hasReported
   };
 })(window);

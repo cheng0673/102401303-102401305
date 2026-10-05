@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>个人主页 - 福大失物招领</title>
+  <link rel="stylesheet" href="css/style.css?v=5">
+</head>
+<body>
+  <div class="app">
+    <header class="page-header">
+      <a class="back-btn" href="javascript:history.back()" aria-label="返回上一页">‹</a>
+      <h2>个人主页</h2>
+      <span class="header-placeholder"></span>
+    </header>
+
+    <main>
+      <!-- 发布者资料卡（Figma 原型 16.发布者主页：白底卡片） -->
+      <section class="up-card">
+        <div class="up-avatar" id="uAvatar">🐱</div>
+        <div class="up-info">
+          <div class="up-name" id="uName"></div>
+          <div class="up-meta" id="uMeta" hidden></div>
+          <div class="up-stats" id="uStats"></div>
+        </div>
+      </section>
+
+      <!-- 联系方式列表（分行展示，逐行复制） -->
+      <section class="up-contacts" id="uContactWrap" hidden></section>
+
+      <!-- TA的发布 -->
+      <p class="up-label">TA的发布（<span id="uCount">0</span>）</p>
+      <section id="uList" class="list" aria-live="polite"></section>
+
+      <!-- 空状态 -->
+      <section id="uEmpty" class="empty" hidden>
+        <span class="empty-icon">🗂</span>
+        <span class="empty-text">TA 还没有发布过信息</span>
+      </section>
+    </main>
+
+    <!-- 底部导航（与其他页面保持一致） -->
+    <nav class="bottom-nav">
+      <a class="nav-item" data-nav="index" href="index.html">首页</a>
+      <a class="nav-item nav-publish" data-nav="publish" href="publish.html" aria-label="发布"></a>
+      <a class="nav-item" data-nav="profile" href="profile.html">我的</a>
+    </nav>
+  </div>
+
+  <script src="js/storage.js?v=5"></script>
+  <script src="js/common.js?v=5"></script>
+  <script src="js/user-profile.js?v=5"></script>
+</body>
+</html>

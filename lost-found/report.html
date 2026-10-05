@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>举报 - 福大失物招领</title>
+  <link rel="stylesheet" href="css/style.css?v=5">
+</head>
+<body>
+  <div class="app">
+    <header class="page-header">
+      <a class="back-btn" href="javascript:history.back()" aria-label="返回上一页">‹</a>
+      <h2>举报</h2>
+      <span class="header-placeholder"></span>
+    </header>
+
+    <main>
+      <!-- 举报表单（Figma 原型 15.举报） -->
+      <form id="reportForm" class="report-form" novalidate>
+        <p class="report-hint">
+          你正在举报「<span class="report-target" id="rTarget"></span>」这条信息，
+          请选择举报原因，我们会在 24 小时内核实处理。
+        </p>
+
+        <!-- 五种举报原因单选 -->
+        <div class="report-options" id="rOptions">
+          <button type="button" class="report-option" data-reason="涉嫌虚假信息">
+            <span class="radio-dot"></span>涉嫌虚假信息
+          </button>
+          <button type="button" class="report-option" data-reason="涉嫌冒领他人财物">
+            <span class="radio-dot"></span>涉嫌冒领他人财物
+          </button>
+          <button type="button" class="report-option" data-reason="内容违规（广告 / 不当言论）">
+            <span class="radio-dot"></span>内容违规（广告 / 不当言论）
+          </button>
+          <button type="button" class="report-option" data-reason="骚扰行为">
+            <span class="radio-dot"></span>骚扰行为
+          </button>
+          <button type="button" class="report-option" data-reason="其他问题">
+            <span class="radio-dot"></span>其他问题
+          </button>
+        </div>
+
+        <!-- 补充说明（选填） -->
+        <div class="form-group">
+          <label for="rDetail">补充说明（选填）</label>
+          <textarea class="form-control" id="rDetail" maxlength="200"
+                    placeholder="请描述具体情况，不少于 10 个字..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">提交举报</button>
+      </form>
+
+      <!-- 已举报过：不允许重复举报 -->
+      <div id="reportDone" class="empty" hidden>
+        <span class="empty-icon">🚫</span>
+        <span class="empty-text">你已经举报过这条信息，感谢你的反馈</span>
+        <a class="btn btn-primary" href="index.html" style="display:inline-flex;">返回首页</a>
+      </div>
+
+      <!-- 信息不存在 -->
+      <div id="notFound" class="not-found" hidden>
+        <span class="empty-icon" style="font-size:52px;">😵</span>
+        <p style="margin:12px 0 18px;color:var(--text-sub);">这条信息不存在或已被删除</p>
+        <a class="btn btn-primary" href="index.html" style="display:inline-flex;">返回首页</a>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/storage.js?v=5"></script>
+  <script src="js/common.js?v=5"></script>
+  <script src="js/report.js?v=5"></script>
+</body>
+</html>

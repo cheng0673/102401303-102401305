@@ -11,6 +11,13 @@
   UI.$('#pAvatar').textContent = profile.avatar || '🐱';
   UI.$('#pName').textContent = profile.nickname || '福大同学';
 
+  // 学号 · 学院（设置页填写，未填则不显示该行）
+  var meta = [];
+  if (profile.studentId) meta.push('学号 ' + profile.studentId);
+  if (profile.college) meta.push(profile.college);
+  UI.$('#pMeta').textContent = meta.join(' · ');
+  UI.$('#pMeta').hidden = meta.length === 0;
+
   // 统计：本机发布数、其中已完成（已找回/已归还）数、收藏数
   var mineItems = Storage.getMineItems();
   var doneCount = mineItems.filter(function (i) { return i.status === 'done'; }).length;

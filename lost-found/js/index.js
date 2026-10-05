@@ -14,7 +14,8 @@
     keyword: '',
     type: 'all',       // all | lost | found
     category: 'all',   // all | 具体类别
-    campus: Storage.getCampus()  // 校区筛选
+    campus: Storage.getCampus(),  // 校区筛选
+    sort: 'desc'       // desc | asc（按发布时间 createdAt 排序，默认最新在前）
   };
 
   var listEl = UI.$('#itemList');
@@ -61,6 +62,14 @@
     var emptyText = keyword
       ? '没有找到与“' + state.keyword.trim() + '”相关的信息，换个关键词试试～'
       : state.campus + ' 校区暂无相关信息';
+
+    // 按发布时间排序（精确时间戳 createdAt）：desc 最新在前，asc 最早在前
+    filtered.sort(function (a, b) {
+      var ta = a.createdAt || 0;
+      var tb = b.createdAt || 0;
+      return state.sort === 'asc' ? ta - tb : tb - ta;
+    });
+
     UI.renderCardList(listEl, filtered, emptyEl, emptyText);
   }
 
@@ -99,6 +108,14 @@
     UI.$all('.cat-pill', categoryPills).forEach(function (p) { p.classList.remove('active'); });
     pill.classList.add('active');
     state.category = pill.getAttribute('data-category');
+    render();
+  });
+
+  // 排序方式切换（默认最新发布 desc，可切最早发布 asc）
+  var sortSelect = UI.$('#sortSelect');
+  sortSelect.value = state.sort;
+  sortSelect.addEventListener('change', function () {
+    state.sort = sortSelect.value;
     render();
   });
 

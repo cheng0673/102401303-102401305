@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>设置 - 福大失物招领</title>
-  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/style.css?v=5">
 </head>
 <body data-page="profile">
   <div class="app">
@@ -19,6 +19,18 @@
       <div class="form-group" data-field="nickname">
         <label for="nickname">昵称</label>
         <input class="form-control" type="text" id="nickname" maxlength="20" placeholder="请输入昵称">
+      </div>
+
+      <!-- 学号 -->
+      <div class="form-group" data-field="studentId">
+        <label for="studentId">学号（选填）</label>
+        <input class="form-control" type="text" id="studentId" maxlength="12" placeholder="例如：20231234">
+      </div>
+
+      <!-- 学院 -->
+      <div class="form-group" data-field="college">
+        <label for="college">学院（选填）</label>
+        <input class="form-control" type="text" id="college" maxlength="20" placeholder="例如：计算机与大数据学院">
       </div>
 
       <!-- 头像 -->
@@ -71,8 +83,8 @@
     </nav>
   </div>
 
-  <script src="js/storage.js?v=2"></script>
-  <script src="js/common.js?v=2"></script>
-  <script src="js/settings.js?v=2"></script>
+  <script src="js/storage.js?v=5"></script>
+  <script src="js/common.js?v=5"></script>
+  <script src="js/settings.js?v=5"></script>
 </body>
 </html>

@@ -236,6 +236,59 @@
   var savedNickname = Storage.getProfile().nickname;
   if (savedNickname && savedNickname !== '福大同学') publisherInput.value = savedNickname;
 
+  /* ---------- 编辑模式（新功能三）：URL 带 id 时预填原数据并改为更新提交 ---------- */
+
+  var editId = UI.getQuery('id');
+  var editItem = editId ? Storage.getItem(editId) : null;
+
+  function applyEditMode() {
+    UI.$('.page-header h2').textContent = '修改信息';
+    document.title = '修改信息 - 福大失物招领';
+    UI.$('#submitBtn').textContent = '保存修改';
+
+    // 校区沿用原帖所属校区
+    campusSelect.value = Storage.itemCampus(editItem);
+
+    // 类型回显
+    typeInput.value = editItem.type;
+    typeOptions.forEach(function (b) {
+      var t = b.getAttribute('data-type');
+      b.classList.remove('selected-lost', 'selected-found');
+      b.setAttribute('aria-checked', 'false');
+      if (t === editItem.type) {
+        b.classList.add(editItem.type === 'lost' ? 'selected-lost' : 'selected-found');
+        b.setAttribute('aria-checked', 'true');
+      }
+    });
+
+    // 类别回显：内置类别直接选中；自定义类别走“其他”+输入框
+    if (Storage.CATEGORIES.indexOf(editItem.category) !== -1) {
+      categorySelect.value = editItem.category;
+      categoryCustom.hidden = true;
+    } else {
+      categorySelect.value = '其他';
+      categoryCustom.hidden = false;
+      categoryCustom.value = editItem.category;
+    }
+
+    UI.$('#title').value = editItem.title;
+    locationInput.value = editItem.location;
+    timeInput.value = toLocalInputValue(new Date(editItem.time));
+    UI.$('#description').value = editItem.description;
+    UI.$('#contact').value = editItem.contact;
+    publisherInput.value = editItem.publisher;
+
+    // 图片回显
+    images = Array.isArray(editItem.images) ? editItem.images.slice() : [];
+    renderImagePreview();
+  }
+
+  if (editId && !editItem) {
+    UI.toast('原信息不存在或已被删除，已切换为发布模式', 'error');
+  } else if (editItem) {
+    applyEditMode();
+  }
+
   // 输入时清除该字段的错误态
   UI.$all('.form-control', form).forEach(function (control) {
     control.addEventListener('input', function () {
@@ -315,7 +368,7 @@
 
     var values = {
       type: typeInput.value,
-      campus: Storage.getCampus(),
+      campus: campusSelect.value || Storage.getCampus(),
       title: UI.$('#title').value.trim(),
       category: getFinalCategory(),
       location: locationInput.value.trim(),
@@ -333,6 +386,16 @@
     }
 
     try {
+      // 编辑模式：更新原帖并跳详情页（新功能三）
+      if (editItem) {
+        Storage.updateItem(editItem.id, values);
+        UI.toast('✏️ 修改成功');
+        setTimeout(function () {
+          location.href = 'detail.html?id=' + encodeURIComponent(editItem.id) + '&from=home';
+        }, 600);
+        return;
+      }
+
       var record = Storage.addItem(values);
       UI.toast('🎉 发布成功');
       setTimeout(function () {

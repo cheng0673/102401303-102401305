@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>福大失物招领 - 信息详情</title>
-  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/style.css?v=5">
 </head>
 <body data-page="detail">
   <div class="app">
     <header class="page-header">
-      <a class="back-btn" href="javascript:history.back()" aria-label="返回上一页">‹</a>
+      <a class="back-btn" href="index.html" aria-label="返回首页">‹</a>
       <h2>信息详情</h2>
       <span class="header-placeholder"></span>
     </header>
@@ -45,10 +45,14 @@
             <span class="info-label" id="dTimeLabel">丢失时间</span>
             <span class="info-value" id="dTime"></span>
           </div>
-          <div class="info-row">
+          <a class="info-row publisher-row" id="publisherRow" href="#" aria-label="查看发布者主页">
             <span class="info-label">发布者</span>
-            <span class="info-value" id="dPublisher"></span>
-          </div>
+            <span class="info-value publisher-value">
+              <span class="publisher-avatar" id="dPublisherAvatar"></span>
+              <span id="dPublisher"></span>
+              <span class="row-arrow">›</span>
+            </span>
+          </a>
         </section>
 
         <!-- 描述 -->
@@ -83,6 +87,11 @@
         <div class="detail-actions" id="doneActionWrap">
           <button type="button" class="btn btn-primary btn-block" id="markDoneBtn"></button>
         </div>
+
+        <!-- 举报入口（新功能一） -->
+        <div class="report-entry" id="reportEntry">
+          <a id="reportLink" href="#">⚠️ 举报此信息</a>
+        </div>
       </div>
 
       <!-- 信息不存在 / 链接异常 -->
@@ -106,8 +115,8 @@
     </nav>
   </div>
 
-  <script src="js/storage.js?v=2"></script>
-  <script src="js/common.js?v=2"></script>
-  <script src="js/detail.js?v=2"></script>
+  <script src="js/storage.js?v=5"></script>
+  <script src="js/common.js?v=5"></script>
+  <script src="js/detail.js?v=5"></script>
 </body>
 </html>

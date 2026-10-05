@@ -14,6 +14,11 @@
   var id = UI.getQuery('id');
   var item = id ? Storage.getItem(id) : null;
 
+  // 举报/修改成功跳来时带 from=home，返回键直接回首页
+  if (UI.getQuery('from') === 'home') {
+    UI.$('.back-btn').href = 'index.html';
+  }
+
   // 链接异常或信息已删除
   if (!item) {
     notFound.hidden = false;
@@ -54,6 +59,9 @@
     UI.$('#dDescription').textContent = item.description;
     UI.$('#dContact').textContent = item.contact;
     UI.$('#dPublisher').textContent = item.publisher;
+    // 发布者头像（昵称哈希生成）+ 跳转发布者主页
+    UI.$('#dPublisherAvatar').textContent = UI.hashAvatar(item.publisher);
+    UI.$('#publisherRow').href = 'user-profile.html?name=' + encodeURIComponent(item.publisher);
 
     // 物品图片画廊（无图则隐藏整个面板）
     var galleryPanel = UI.$('#dGalleryPanel');
@@ -137,6 +145,16 @@
     render();
     UI.toast(favored ? '已加入收藏' : '已取消收藏');
   });
+
+  /* ---------- 举报入口（新功能一） ---------- */
+
+  var reportEntry = UI.$('#reportEntry');
+  if (Storage.hasReported(item.id)) {
+    // 同一用户对同一帖子只能举报一次
+    reportEntry.innerHTML = '<span class="reported-text">🚫 已举报，感谢你的反馈</span>';
+  } else {
+    UI.$('#reportLink').href = 'report.html?id=' + encodeURIComponent(item.id);
+  }
 
   wrap.hidden = false;
   render();

@@ -11,33 +11,36 @@
   var listEl = UI.$('#mineList');
   var emptyEl = UI.$('#mineEmpty');
 
-  /** 渲染“我的发布”卡片（比首页卡片多一行操作按钮） */
+  /** 渲染“我的发布”卡片（图二：左右布局，右侧竖排操作按钮） */
   function mineCardHTML(item) {
-    var typeClass = item.type === 'lost' ? 'badge-lost' : 'badge-found';
     var statusClass = item.status === 'done' ? 'status-done' : 'status-active';
     var doneWord = item.type === 'lost' ? '已找到' : '已归还';
 
     // 进行中才显示“标记完成”按钮
     var markBtn = item.status === 'active'
       ? '<button type="button" class="btn btn-outline" data-action="done" data-id="' +
-        UI.escapeHtml(item.id) + '">✅ 标记为' + doneWord + '</button>'
+        UI.escapeHtml(item.id) + '">✅ 标记' + doneWord + '</button>'
       : '';
 
     return '' +
-      '<div class="card">' +
-        '<a class="mine-card-main" href="detail.html?id=' + encodeURIComponent(item.id) + '">' +
-          '<div class="card-top">' +
-            '<span class="badge ' + typeClass + '">' + UI.TYPE_TEXT[item.type] + '</span>' +
-            '<span class="status ' + statusClass + '">' + UI.statusText(item) + '</span>' +
-          '</div>' +
-          '<h3 class="card-title">' + UI.escapeHtml(item.title) + '</h3>' +
-          '<div class="card-meta">' +
-            '<span class="meta-item">📍 ' + UI.escapeHtml(item.location) + '</span>' +
-            '<span class="meta-item">🕐 ' + UI.escapeHtml(UI.formatDateTime(item.time)) + '</span>' +
-          '</div>' +
+      '<div class="card mine-card">' +
+        '<a class="mine-card-icon" href="detail.html?id=' + encodeURIComponent(item.id) + '">' +
+          UI.escapeHtml(UI.hashAvatar(item.title)) +
         '</a>' +
+        '<div class="mine-card-body">' +
+          '<a class="mine-card-main" href="detail.html?id=' + encodeURIComponent(item.id) + '">' +
+            '<h3 class="card-title">' + UI.escapeHtml(item.title) + '</h3>' +
+            '<div class="card-meta">' +
+              '<span class="meta-item">📍 ' + UI.escapeHtml(item.location) + '</span>' +
+            '</div>' +
+            '<div class="card-meta">' +
+              '<span class="meta-item">🕐 ' + UI.escapeHtml(UI.formatDateTime(item.time)) + '</span>' +
+            '</div>' +
+          '</a>' +
+          '<span class="status ' + statusClass + '">' + UI.statusText(item) + '</span>' +
+        '</div>' +
         '<div class="mine-actions">' +
-          '<a class="btn btn-gray" href="detail.html?id=' + encodeURIComponent(item.id) + '">👀 查看详情</a>' +
+          '<a class="btn btn-outline" href="publish.html?id=' + encodeURIComponent(item.id) + '">✏️ 编辑</a>' +
           markBtn +
           '<button type="button" class="btn btn-danger-outline" data-action="delete" data-id="' +
             UI.escapeHtml(item.id) + '">🗑 删除</button>' +
